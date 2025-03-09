@@ -2,6 +2,7 @@ package main
 
 import (
 	"image"
+	"math"
 	"os"
 
 	_ "image/png"
@@ -35,6 +36,8 @@ func run() {
 		panic(err)
 	}
 
+	win.SetSmooth(true)
+
 	pic, err := loadPicture("hiking.png")
 	if err != nil {
 		panic(err)
@@ -44,7 +47,10 @@ func run() {
 
 	win.Clear(colornames.Greenyellow)
 
-	sprite.Draw(win, pixel.IM.Moved(win.Bounds().Center()))
+	mat := pixel.IM
+	mat = mat.Moved(win.Bounds().Center())
+	mat = mat.Rotated(win.Bounds().Center(), math.Pi/4)
+	sprite.Draw(win, mat)
 
 	for !win.Closed() {
 		win.Update()
