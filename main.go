@@ -3,6 +3,7 @@ package main
 import (
 	"image"
 	"os"
+	"time"
 
 	_ "image/png"
 
@@ -37,8 +38,29 @@ func run() {
 
 	win.SetSmooth(true)
 
+	pic, err := loadPicture("hiking.png")
+	if err != nil {
+		panic(err)
+	}
+
+	sprite := pixel.NewSprite(pic, pic.Bounds())
+
+	angle := 0.0
+
+	last := time.Now()
 	for !win.Closed() {
-		win.Clear(colornames.Whitesmoke)
+		dt := time.Since(last).Seconds()
+		last = time.Now()
+
+		angle += 3 * dt
+
+		win.Clear(colornames.Firebrick)
+
+		mat := pixel.IM
+		mat = mat.Rotated(pixel.ZV, angle)
+		mat = mat.Moved(win.Bounds().Center())
+		sprite.Draw(win, mat)
+
 		win.Update()
 	}
 }
